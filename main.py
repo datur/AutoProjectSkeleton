@@ -13,7 +13,7 @@ TODO:
 
 '''
 GITHUB_CREATE_URL = "https://api.github.com/user/repos"
-
+GITHUB_PUSH_URL = "https://github.com/"
 
 def parse_args():
 
@@ -122,7 +122,8 @@ def create_repo(repo_name, language=None, licence=None, desc=None):
         response = requests.post(
             GITHUB_CREATE_URL, headers=header, data=json.dumps(data))
 
-        print(response.content)
+        repo_suffix = json.loads(response.content)
+        repo_suffix = repo_suffix['full_name'] 
         response.raise_for_status()
     except HTTPError as http_err:
         if http_err.response.status_code == 422:
@@ -135,9 +136,13 @@ def create_repo(repo_name, language=None, licence=None, desc=None):
     else:
         print('Created new Repository')
 
-
-# os.popen("git init")
-# os.popen("git add remote ")
+    repo_url = GITHUB_PUSH_URL+repo_suffix+'.git'
+    os.popen("git init")
+    os.popen(f"git remote add origin {repo_url}") 
+    os.popen(f'git add .')
+    os.popen(f"git commit -m 'initial commit'")
+    os.popen(f'git push -u origin master')
+    
 
 if __name__ == '__main__':
     args = parse_args()
