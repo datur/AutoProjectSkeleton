@@ -1,32 +1,38 @@
 import os
+import sys
 import json
 import requests
 from requests.exceptions import HTTPError
 import argparse
 
+
 '''
-TODO: 
-    -   Create GitRepo using curl
-    -   argparse options: github username, repo name, location - default to cwd, 
-        
+TODO:
+    - Get github username url from the request response 
+
 
 '''
 GITHUB_CREATE_URL = "https://api.github.com/user/repos"
 
+
 def parse_args():
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--projectname', type=str, help='Name of the project', required=True)
+    parser.add_argument('-n', '--projectname', type=str,
+                        help='Name of the project', required=True)
     parser.add_argument('-g', '--usegit', help='Flag whether git repo is created and initialised. Please ensure github \
      access token is defined in environment variables the default env variable for this flag is "GITHUB_TOKEN" if this \
      is different to you use the token name flag', action='store_true')
     parser.add_argument('-t', '--tokenvariable', help='Optional flag for specifying a custom env variable name',
                         action='store_true')
-    parser.add_argument('-p', '--path', help="specify path if not current working directory")
-    parser.add_argument('-l', '--license', help="Specify the programming language")
-    parser.add_argument('-d', '--description', help="Description of this project")
+    parser.add_argument(
+        '-p', '--path', help="specify path if not current working directory")
+    parser.add_argument('-l', '--license',
+                        help="Specify the programming language")
+    parser.add_argument('-d', '--description',
+                        help="Description of this project")
 
     return parser.parse_args()
-
 
 def create_filesystem(repo_name: str):
     """
@@ -88,18 +94,19 @@ def create_filesystem(repo_name: str):
     with open('Instructions.md', 'w') as f:
         text = '''
 # Sphinx Instructions
-        
+
 If sphinx is not installed run:
-        
+
     ```pip install sphinx```
-        
+
 Once installed run `sphinx-quickstart`
-        
+
 Dont forget to fix the path in `conf.py` change it to something like `../<module>` or `..`
         '''
         f.write(text)
 
     os.chdir('..')
+
 
 def create_repo(repo_name, language=None, licence=None, desc=None):
     print(os.getcwd())
@@ -112,13 +119,15 @@ def create_repo(repo_name, language=None, licence=None, desc=None):
     if desc is not None:
         data['description'] = desc
     try:
-        response = requests.post(GITHUB_CREATE_URL, headers=header, data=json.dumps(data))
+        response = requests.post(
+            GITHUB_CREATE_URL, headers=header, data=json.dumps(data))
 
         print(response.content)
         response.raise_for_status()
     except HTTPError as http_err:
         if http_err.response.status_code == 422:
-            print(f'HTTP error occurred: 422 This repository already exists on your account')
+            print(
+                f'HTTP error occurred: 422 This repository already exists on your account')
         else:
             print(f'HTTP error occurred: {http_err}')
     except Exception as err:
@@ -127,13 +136,12 @@ def create_repo(repo_name, language=None, licence=None, desc=None):
         print('Created new Repository')
 
 
-
 # os.popen("git init")
 # os.popen("git add remote ")
-
 
 if __name__ == '__main__':
     args = parse_args()
     create_filesystem(args.projectname)
     if args.usegit:
-        create_repo(args.projectname, language='python', licence="mit", desc='Test Repository')
+        create_repo(args.projectname, language='python',
+                    licence="mit", desc='Test Repository')
