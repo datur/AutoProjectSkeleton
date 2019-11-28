@@ -19,7 +19,7 @@ def create_process(process):
     print(output)
 
 
-def create_python_tree():
+def create_python_tree(repo_name):
     # Change dir to newly created dir for the rest of file inits
     os.chdir(f'{os.getcwd()}/{repo_name}')
     with open('README.md', 'w') as f:
@@ -122,7 +122,7 @@ def create_filesystem(repo_name: str, filepath: str, use_git=False, git_data=Non
         os.mkdir(repo_name)
 
     if git_data['lang'] == 'python':
-        create_python_tree()
+        create_python_tree(repo_name=repo_name)
 
     if use_git:
         create_process(f'git add .')
