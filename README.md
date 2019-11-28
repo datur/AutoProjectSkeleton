@@ -2,7 +2,7 @@
 
 A simple command line project skeleton generator with git integration.
 
-    usage: main.py [-h] -n PROJECTNAME [-g] [-p PATH] [-l LICENSE] [-c PROGRAMMINGLANGUAGE] [-d DESCRIPTION]
+    usage: AutoProjectSkeleton.py [-h] -n PROJECTNAME [-g] [-p PATH] [-l LICENSE] [-c PROGRAMMINGLANGUAGE] [-d DESCRIPTION]
 
     optional arguments:
     -h, --help            show this help message and exit
